@@ -1,4 +1,4 @@
-module Lexpgsql
+module PgSqlLexer
   class Token
     property type : Symbol
     property value : String | Nil

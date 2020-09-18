@@ -1,7 +1,8 @@
 require "./token"
 require "./keyword"
+require "./exceptions"
 
-module Lexpgsql
+module PgSqlLexer
   alias Tokens = Array(Token)
 
   class Lexer
@@ -9,7 +10,7 @@ module Lexpgsql
     @pos : Int32 = 0
     @eos : Int32
 
-    def initialize(@buffer : String)
+    def initialize(@buffer : String, @use_reserved_keywords = true, @use_non_reserved_keywords = false)
       @eos = @buffer.size - 1
       scan
     end
@@ -115,7 +116,9 @@ module Lexpgsql
       end
       @pos -= 1 unless c == '\0'
       ident = token.join
-      @tokens << Token.new(Keyword.is_keyword(ident) ? :keyword : :identifier, ident)
+      @tokens << Token.new(
+        Keyword.is_keyword(ident, @use_reserved_keywords, @use_non_reserved_keywords) ? :keyword : :identifier,
+        ident)
     end
 
     def operator(first_char : Char) : Nil

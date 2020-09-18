@@ -1,6 +1,6 @@
 require "./token"
 
-module Lexpgsql
+module PgSqlLexer
   class Formatter
     def initialize(@tokens : Array(Token))
     end

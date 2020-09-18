@@ -1,15 +1,15 @@
 require "./spec_helper"
 
-describe Lexpgsql do
+describe PgSqlLexer do
   describe "Lexer" do
     it "returns an empty array of tokens for an empty string" do
-      tokens = Lexpgsql::Lexer.new("").tokens
+      tokens = PgSqlLexer::Lexer.new("").tokens
       tokens.size.should eq(0)
     end
 
     it "correctly identifies a to-eol comment token" do
       ["hello world", " hello world", "  hello world", "hello  world", "hello world "].each do |s|
-        tokens = Lexpgsql::Lexer.new("--#{s}").tokens
+        tokens = PgSqlLexer::Lexer.new("--#{s}").tokens
         tokens.size.should eq(1)
         tokens[0].type.should eq(:comment)
         tokens[0].value.should eq("hello world")
@@ -18,8 +18,8 @@ describe Lexpgsql do
 
     it "detects a missing end comment" do
       ["/*", "/* *", "/* * /", "/*  ", "/* *\n/"].each do |s|
-        expect_raises(Lexpgsql::MissingEndComment) do
-          Lexpgsql::Lexer.new(s).tokens
+        expect_raises(PgSqlLexer::MissingEndComment) do
+          PgSqlLexer::Lexer.new(s).tokens
         end
       end
     end
@@ -33,7 +33,7 @@ describe Lexpgsql do
        "hello\nworld",
        "\n hello\n world\n",
       ].each do |s|
-        tokens = Lexpgsql::Lexer.new("/*#{s}*/").tokens
+        tokens = PgSqlLexer::Lexer.new("/*#{s}*/").tokens
         tokens.size.should eq(1)
         tokens[0].type.should eq(:comment)
         tokens[0].value.should eq("hello world")
@@ -42,22 +42,22 @@ describe Lexpgsql do
 
     it "correctly identifies special character tokens" do
       ["(", ")", ":", "::", "[", "]", ",", ";", "."].each do |s|
-        tokens = Lexpgsql::Lexer.new(s).tokens
+        tokens = PgSqlLexer::Lexer.new(s).tokens
         tokens.size.should eq(1)
       end
     end
 
     it "detects an invalid operator" do
       ["#--", "#/*", "*-", "*+"].each do |s|
-        expect_raises(Lexpgsql::InvalidOperator) do
-          Lexpgsql::Lexer.new(s).tokens
+        expect_raises(PgSqlLexer::InvalidOperator) do
+          PgSqlLexer::Lexer.new(s).tokens
         end
       end
     end
 
     it "correctly identifies an operator" do
       ["+", "*", "/", "<", ">", "=", "~", "!", "@", "#", "%", "^", "&", "|", "`", "?", "<=", ">=", "@-", "%+"].each do |s|
-        tokens = Lexpgsql::Lexer.new(s).tokens
+        tokens = PgSqlLexer::Lexer.new(s).tokens
         tokens.size.should eq(1)
         tokens[0].type.should eq(:operator)
         tokens[0].value.should eq(s)
@@ -66,21 +66,21 @@ describe Lexpgsql do
 
     it "detects a missing end to a quoted identifier" do
       ["", " ", "aaa", " aaa", " a ", "a  "].each do |s|
-        expect_raises(Lexpgsql::MissingEndQuotedIdentifier) do
-          Lexpgsql::Lexer.new(%("#{s})).tokens
+        expect_raises(PgSqlLexer::MissingEndQuotedIdentifier) do
+          PgSqlLexer::Lexer.new(%("#{s})).tokens
         end
       end
     end
 
     it "detects a zero length quoted identifier" do
-      expect_raises(Lexpgsql::NoZeroLengthQuotedIdentifier) do
-        Lexpgsql::Lexer.new(%("")).tokens
+      expect_raises(PgSqlLexer::NoZeroLengthQuotedIdentifier) do
+        PgSqlLexer::Lexer.new(%("")).tokens
       end
     end
 
     it "correctly identifies quoted identifier tokens" do
       ["a", " ", "hello", "hello world"].each do |s|
-        tokens = Lexpgsql::Lexer.new(%("#{s}")).tokens
+        tokens = PgSqlLexer::Lexer.new(%("#{s}")).tokens
         tokens.size.should eq(1)
         tokens[0].type.should eq(:quoted_identifier)
         tokens[0].value.should eq(%("#{s}"))
@@ -89,7 +89,7 @@ describe Lexpgsql do
 
     it "correctly identifies unicode quoted identifier tokens" do
       ["a", " ", "hello", "hello world", "\\0441\\043B\\043E\\043D", "d\\0061t\\+000061"].each do |s|
-        tokens = Lexpgsql::Lexer.new(%(u&"#{s}")).tokens
+        tokens = PgSqlLexer::Lexer.new(%(u&"#{s}")).tokens
         tokens.size.should eq(1)
         tokens[0].type.should eq(:quoted_identifier)
         tokens[0].value.should eq(%(u&"#{s}"))
@@ -98,15 +98,15 @@ describe Lexpgsql do
 
     it "detects a missing closing quote for a string constant" do
       ["'", "' ", "'aaa", "' aaa", "' a ", "'a  ", "'a' \n'bc"].each do |s|
-        expect_raises(Lexpgsql::MissingEndQuotedLiteral) do
-          Lexpgsql::Lexer.new(s).tokens
+        expect_raises(PgSqlLexer::MissingEndQuotedLiteral) do
+          PgSqlLexer::Lexer.new(s).tokens
         end
       end
     end
 
     it "correctly identifies a string constant" do
       ["''", "'a'", "' '", "'abc'"].each do |s|
-        tokens = Lexpgsql::Lexer.new(s).tokens
+        tokens = PgSqlLexer::Lexer.new(s).tokens
         tokens.size.should eq(1)
         tokens[0].type.should eq(:string_constant)
         tokens[0].value.should eq(s)
@@ -115,7 +115,7 @@ describe Lexpgsql do
 
     it "correctly identifies and combines a multi-line string constant" do
       ["'abc'\n'def'", "'abc'  \n'def'", "'ab'\n'cd'\n'ef'", "'a'  \n  'b'\n  'c'  \n  'def'"].each do |s|
-        tokens = Lexpgsql::Lexer.new(s).tokens
+        tokens = PgSqlLexer::Lexer.new(s).tokens
         tokens.size.should eq(1)
         tokens[0].type.should eq(:string_constant)
         tokens[0].value.should eq("'abcdef'")
@@ -125,7 +125,7 @@ describe Lexpgsql do
     it "correctly identifies unicode quoted string constant" do
       ["a", " ", "hello", "hello world", "\\0441\\043B\\043E\\043D", "d\\0061t\\+000061"].each do |s|
         buf = "u&'#{s}'"
-        tokens = Lexpgsql::Lexer.new(buf).tokens
+        tokens = PgSqlLexer::Lexer.new(buf).tokens
         tokens.size.should eq(1)
         tokens[0].type.should eq(:string_constant)
         tokens[0].value.should eq(buf)
@@ -134,15 +134,15 @@ describe Lexpgsql do
 
     it "detects an invalid numeric constant" do
       ["1.3.2", "1a", "123e", "0.e-a"].each do |s|
-        expect_raises(Lexpgsql::InvalidNumericLiteral) do
-          Lexpgsql::Lexer.new(s).tokens
+        expect_raises(PgSqlLexer::InvalidNumericLiteral) do
+          PgSqlLexer::Lexer.new(s).tokens
         end
       end
     end
 
     it "correctly identifies a numeric constant" do
       ["1", "987", "0", "0.123", ".123", "123e-1", "123e+1", "123e1"].each do |s|
-        tokens = Lexpgsql::Lexer.new(s).tokens
+        tokens = PgSqlLexer::Lexer.new(s).tokens
         tokens.size.should eq(1)
         tokens[0].type.should eq(:numeric_constant)
         tokens[0].value.should eq(s)
@@ -151,15 +151,15 @@ describe Lexpgsql do
 
     it "detects problems with a dollar-quoted string constant" do
       ["$?abc$?", "$$hello$", "$abc$hello$$", "$abc$hello$abcd$", "$a?$hello$a?$"].each do |s|
-        expect_raises(Lexpgsql::InvalidIdentifier) do
-          Lexpgsql::Lexer.new(s).tokens
+        expect_raises(PgSqlLexer::InvalidIdentifier) do
+          PgSqlLexer::Lexer.new(s).tokens
         end
       end
     end
 
     it "correctly identifies a dollar-quoted string constant" do
       ["$$$$", "$$x$$", "$$\n$$", "$$abc\n\tdef\nghi$$", "$abc$hel$ablo$abc$"].each do |s|
-        tokens = Lexpgsql::Lexer.new(s).tokens
+        tokens = PgSqlLexer::Lexer.new(s).tokens
         tokens.size.should eq(1)
         tokens[0].type.should eq(:string_constant)
         tokens[0].value.should eq(s)
@@ -168,7 +168,7 @@ describe Lexpgsql do
 
     it "correctly identifies a positional parameter" do
       ["$1", "$12", "$1234"].each do |s|
-        tokens = Lexpgsql::Lexer.new(s).tokens
+        tokens = PgSqlLexer::Lexer.new(s).tokens
         tokens.size.should eq(1)
         tokens[0].type.should eq(:positional_parameter)
         tokens[0].value.should eq(s)
@@ -177,15 +177,15 @@ describe Lexpgsql do
 
     it "detects problems with a binary bit-string" do
       ["b'1 '", "b'02'", "b'1x'", "B'1 '", "B'02'", "B'1x'"].each do |s|
-        expect_raises(Lexpgsql::InvalidBinaryBitString) do
-          Lexpgsql::Lexer.new(s).tokens
+        expect_raises(PgSqlLexer::InvalidBinaryBitString) do
+          PgSqlLexer::Lexer.new(s).tokens
         end
       end
     end
 
     it "correctly identifies a binary bit-string" do
       ["b'1'", "b'0'", "B'1'", "B'0'", "b'1010101'", "b'0000000'"].each do |s|
-        tokens = Lexpgsql::Lexer.new(s).tokens
+        tokens = PgSqlLexer::Lexer.new(s).tokens
         tokens.size.should eq(1)
         tokens[0].type.should eq(:binary_bit_string)
         tokens[0].value.should eq(s)
@@ -194,15 +194,15 @@ describe Lexpgsql do
 
     it "detects problems with a hex bit-string" do
       ["x'1 '", "x'0g'", "x'1?'", "X'1 '", "X'0g'", "X'1?'"].each do |s|
-        expect_raises(Lexpgsql::InvalidHexBitString) do
-          Lexpgsql::Lexer.new(s).tokens
+        expect_raises(PgSqlLexer::InvalidHexBitString) do
+          PgSqlLexer::Lexer.new(s).tokens
         end
       end
     end
 
     it "correctly identifies a hex bit-string" do
       ["x'0'", "x'1'", "x'e'", "x'f'", "x'1f'", "x'ff'", "X'0'", "X'1'", "X'e'", "X'f'", "X'1f'", "X'ff'"].each do |s|
-        tokens = Lexpgsql::Lexer.new(s).tokens
+        tokens = PgSqlLexer::Lexer.new(s).tokens
         tokens.size.should eq(1)
         tokens[0].type.should eq(:hex_bit_string)
         tokens[0].value.should eq(s)
@@ -210,8 +210,8 @@ describe Lexpgsql do
     end
 
     it "correctly identifies keywords" do
-      %w(select where with CREATE Trigger index order by where and or).each do |w|
-        tokens = Lexpgsql::Lexer.new(w).tokens
+      %w(select where with Primary CREATE order where and or TiMeStAmP).each do |w|
+        tokens = PgSqlLexer::Lexer.new(w).tokens
         tokens.size.should eq(1)
         tokens[0].type.should eq(:keyword)
         tokens[0].value.should eq(w)
@@ -220,7 +220,7 @@ describe Lexpgsql do
 
     it "correctly identifies identifiers" do
       %w(customer employee manager customer_id created_ts).each do |w|
-        tokens = Lexpgsql::Lexer.new(w).tokens
+        tokens = PgSqlLexer::Lexer.new(w).tokens
         tokens.size.should eq(1)
         tokens[0].type.should eq(:identifier)
         tokens[0].value.should eq(w)
@@ -228,7 +228,7 @@ describe Lexpgsql do
     end
 
     it "correctly identifies tokens in a multi-word string" do
-      tokens = Lexpgsql::Lexer.new("select   *\nfrom\tcustomer\nwhere (id > 10) or (customer_name like 'numpty%')").tokens
+      tokens = PgSqlLexer::Lexer.new("select   *\nfrom\tcustomer\nwhere (id > 10) or (customer_name like 'numpty%')").tokens
       tokens.size.should eq(16)
       tokens[0].type.should eq(:keyword)
       tokens[0].value.should eq("select")
@@ -242,7 +242,7 @@ describe Lexpgsql do
       tokens[4].value.should eq("where")
       tokens[5].type.should eq(:"(")
       tokens[5].value.should be_nil
-      tokens[6].type.should eq(:keyword)
+      tokens[6].type.should eq(:identifier)
       tokens[6].value.should eq("id")
       tokens[7].type.should eq(:operator)
       tokens[7].value.should eq(">")
@@ -262,72 +262,6 @@ describe Lexpgsql do
       tokens[14].value.should eq("'numpty%'")
       tokens[15].type.should eq(:")")
       tokens[15].value.should be_nil
-    end
-  end
-
-  describe "Formatter" do
-    it "correctly minifies a statement with extra whitespace" do
-      Lexpgsql::Formatter.new(
-        Lexpgsql::Lexer
-          .new("\nSELECT   1\n  FROM\t\tsome_table\n;")
-          .tokens)
-        .format_minified.should eq("select 1 from some_table;")
-    end
-
-    it "correctly minifies a statement excluding comments" do
-      Lexpgsql::Formatter.new(
-        Lexpgsql::Lexer
-          .new("SELECT 1 -- Some comment\nFROM\t\tsome_table\n;")
-          .tokens)
-        .format_minified.should eq("select 1 from some_table;")
-    end
-
-    it "correctly minifies a statement excluding multi-line comments" do
-      Lexpgsql::Formatter.new(
-        Lexpgsql::Lexer
-          .new("SELECT 1\n/*\n Some comment\n*/\nFROM\t\tsome_table\n;")
-          .tokens)
-        .format_minified.should eq("select 1 from some_table;")
-    end
-
-    it "correctly minifies a statement including comments" do
-      Lexpgsql::Formatter.new(
-        Lexpgsql::Lexer
-          .new("SELECT 1 -- Some comment\nFROM\t\tsome_table\n;")
-          .tokens)
-        .format_minified(true).should eq("select 1 /* Some comment */ from some_table;")
-    end
-
-    it "correctly minifies a statement including multi-line comments" do
-      Lexpgsql::Formatter.new(
-        Lexpgsql::Lexer
-          .new("SELECT 1\n/*\n Some comment\n*/\nFROM\t\tsome_table\n;")
-          .tokens)
-        .format_minified(true).should eq("select 1 /* Some comment */ from some_table;")
-    end
-
-    it "correctly minifies a statement with a comma-separated list" do
-      Lexpgsql::Formatter.new(
-        Lexpgsql::Lexer
-          .new("SELECT  col1,col2,     col3,\ncol4 from some_table;")
-          .tokens)
-        .format_minified.should eq("select col1, col2, col3, col4 from some_table;")
-    end
-
-    it "correctly minifies a statement with a cast" do
-      Lexpgsql::Formatter.new(
-        Lexpgsql::Lexer
-          .new("SELECT  col1 :: text  ,   col2 from some_table;")
-          .tokens)
-        .format_minified.should eq("select col1::text, col2 from some_table;")
-    end
-
-    it "correctly minifies a statement with a cte" do
-      Lexpgsql::Formatter.new(
-        Lexpgsql::Lexer
-          .new("with a as (\nselect something\n\tfrom somewhere)\nselect blah from somewhere_else\njoin a\n\ton a.id = b.id\nwhere true;")
-          .tokens)
-        .format_minified.should eq("with a as (select something from somewhere) select blah from somewhere_else join a on a.id = b.id where true;")
     end
   end
 end

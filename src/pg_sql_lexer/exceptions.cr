@@ -1,4 +1,4 @@
-module Lexpgsql
+module PgSqlLexer
   class MissingEndComment < Exception
     def initialize
       super("missing end of /* comment")

@@ -1,8 +1,8 @@
-name: lexpgsql
+name: pg_sql_lexer
 version: 0.1.0
 
 authors:
-  - your-name-here <your-email-here>
+  - Steve Baldwin <steve.baldwin@gmail.com>
 
 crystal: 0.35.1
 

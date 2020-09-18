@@ -1,6 +1,6 @@
-# lexpgsql
+# pg_sql_lexer
 
-TODO: Write a description here
+I needed a way to 'minify' SQL statements in another crystal project. This turned out to be quite tricky so I figured the easiest way was to create a simple lexer and use the tokens to generate a minified representation. This lexer is also written in Crystal (obviously) 😀.
 
 ## Installation
 
@@ -9,7 +9,7 @@ TODO: Write a description here
    ```yaml
    dependencies:
      lexpgsql:
-       github: your-github-user/lexpgsql
+       github: horrendo/pg_sql_lexer
    ```
 
 2. Run `shards install`
@@ -17,7 +17,7 @@ TODO: Write a description here
 ## Usage
 
 ```crystal
-require "lexpgsql"
+require "pg_sql_lexer"
 ```
 
 TODO: Write usage instructions here
@@ -28,7 +28,7 @@ TODO: Write development instructions here
 
 ## Contributing
 
-1. Fork it (<https://github.com/your-github-user/lexpgsql/fork>)
+1. Fork it (<https://github.com/horrendo/pg_sql_lexer/fork>)
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
@@ -36,4 +36,4 @@ TODO: Write development instructions here
 
 ## Contributors
 
-- [your-name-here](https://github.com/your-github-user) - creator and maintainer
+- [Steve Baldwin](https://github.com/horrendo) - creator and maintainer

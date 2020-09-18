@@ -1,2 +1,2 @@
 require "spec"
-require "../src/lexpgsql"
+require "../src/pg_sql_lexer"
