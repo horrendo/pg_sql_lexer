@@ -10,7 +10,7 @@ I needed a way to 'minify' SQL statements in another Crystal project. This turne
 
 ```yaml
 dependencies:
-  lexpgsql:
+  pg_sql_lexer:
     github: horrendo/pg_sql_lexer
 ```
 
