@@ -1,0 +1,1 @@
+select * from weather, cities where city = name;

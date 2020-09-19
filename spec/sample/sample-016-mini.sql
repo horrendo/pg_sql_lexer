@@ -1,0 +1,1 @@
+select city, max(temp_lo) from weather group by city having max(temp_lo) < 40;

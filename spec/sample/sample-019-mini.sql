@@ -1,0 +1,1 @@
+delete from weather where city = 'Hayward';

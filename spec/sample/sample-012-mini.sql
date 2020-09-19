@@ -1,0 +1,1 @@
+select * from weather left outer join cities on (weather.city = cities.name);

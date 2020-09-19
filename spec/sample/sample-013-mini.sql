@@ -1,0 +1,1 @@
+select w1.city, w1.temp_lo as low, w1.temp_hi as high, w2.city, w2.temp_lo as low, w2.temp_hi as high from weather w1, weather w2 where w1.temp_lo < w2.temp_lo and w1.temp_hi > w2.temp_hi;

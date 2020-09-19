@@ -1,32 +1,32 @@
 # pg_sql_lexer
 
-I needed a way to 'minify' SQL statements in another crystal project. This turned out to be quite tricky so I figured the easiest way was to create a simple lexer and use the tokens to generate a minified representation. This lexer is also written in Crystal (obviously) 😀.
+I needed a way to 'minify' SQL statements in another Crystal project. This turned out to be quite tricky so I figured the easiest way was to create a simple lexer and use the tokens to generate a minified representation. This lexer is also written in Crystal (obviously) 😀.
 
 [![Build Status](https://travis-ci.org/horrendo/pg_sql_lexer.svg?branch=master)](https://travis-ci.org/horrendo/pg_sql_lexer)
 
 ## Installation
 
-1. Add the dependency to your `shard.yml`:
+- Add the dependency to your `shard.yml`:
 
-   ```yaml
-   dependencies:
-     lexpgsql:
-       github: horrendo/pg_sql_lexer
-   ```
+```yaml
+dependencies:
+  lexpgsql:
+    github: horrendo/pg_sql_lexer
+```
 
-2. Run `shards install`
+- Run `shards install`
 
 ## Usage
 
 ```crystal
 require "pg_sql_lexer"
+:
+raw_sql = {slurp from a file maybe}
+minified = PgSqlLexer::Formatter.new(PgSqlLexer::Lexer(raw_sql).tokens).format_minified
+:
 ```
 
-TODO: Write usage instructions here
-
-## Development
-
-TODO: Write development instructions here
+You can access the documentation [here](https://horrendo.github.io/pg_sql_lexer/)
 
 ## Contributing
 

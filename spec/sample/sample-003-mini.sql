@@ -1,0 +1,1 @@
+select * from weather where city = 'San Francisco' and prcp > 0.0;

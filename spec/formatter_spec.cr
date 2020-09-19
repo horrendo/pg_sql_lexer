@@ -65,5 +65,17 @@ describe PgSqlLexer do
           .tokens)
         .format_minified.should eq("with a as (select something from somewhere) select blah from somewhere_else join a on a.id = b.id where true;")
     end
+
+    it "correctly minifies a bunch of sample SQL's" do
+      Dir.glob("#{__DIR__}/sample/*-raw.sql").each do |r|
+        actual = PgSqlLexer::Formatter.new(PgSqlLexer::Lexer.new(File.read(r).strip).tokens).format_minified
+        m = r.gsub(/[-]raw[.]/, "-mini.")
+        if File.exists?(m)
+          actual.should eq(File.read(m).strip)
+        else
+          File.write(m, actual)
+        end
+      end
+    end
   end
 end

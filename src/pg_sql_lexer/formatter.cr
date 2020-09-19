@@ -64,7 +64,7 @@ module PgSqlLexer
           elsif t.type == :"."
             s << '.'
           elsif t.type == :"("
-            s << ' ' unless no_space
+            s << ' ' unless no_space || prev_type == :identifier
             s << '('
           elsif t.type == :"["
             s << ' ' unless no_space

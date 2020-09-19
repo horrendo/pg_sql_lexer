@@ -1,0 +1,1 @@
+select city from weather where temp_lo = (select max(temp_lo) from weather);

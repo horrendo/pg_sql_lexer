@@ -1,0 +1,1 @@
+select city, (temp_hi + temp_lo) / 2 as temp_avg, date from weather;

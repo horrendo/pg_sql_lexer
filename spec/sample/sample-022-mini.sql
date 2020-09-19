@@ -1,0 +1,1 @@
+select sum(salary) over w, avg(salary) over w from empsalary window w as (partition by depname order by salary desc);

@@ -1,0 +1,1 @@
+select weather.city, weather.temp_lo, weather.temp_hi, weather.prcp, weather.date, cities.location from weather, cities where cities.name = weather.city;
