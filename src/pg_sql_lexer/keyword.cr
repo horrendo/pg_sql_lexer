@@ -1,4 +1,34 @@
 module PgSqlLexer
+  #
+  # This class defines two collections of keywords. The [Postgres Docs](https://www.postgresql.org/docs/current/sql-syntax-lexical.html#SQL-SYNTAX-IDENTIFIERS) define
+  # a category of lexical element - 'Identifiers and Keywords'. Syntactically they are very similar so it is
+  # not always easy to distinguish between them. In writing this library I didn't actually need to
+  # distinguish but I recognise someone elses needs may differ. Postgres makes the keywords available
+  # from the builtin function `pg_get_keywords`. For example:
+  #
+  # ```sql
+  # b2bc_dev=# select * from pg_get_keywords();
+  #        word        | catcode |                   catdesc
+  # -------------------+---------+----------------------------------------------
+  #  abort             | U       | unreserved
+  #  absolute          | U       | unreserved
+  #  access            | U       | unreserved
+  #  action            | U       | unreserved
+  #  add               | U       | unreserved
+  #  admin             | U       | unreserved
+  #  after             | U       | unreserved
+  #  aggregate         | U       | unreserved
+  #  all               | R       | reserved
+  #  :
+  # ```
+  # The `reserved` set of keywords is defined by the query `select word from pg_get_keywords() where catcode != 'U'`.
+  #
+  # The `non-reserved` set of keywords is defined by the query `select word from pg_get_keywords() where catcode = 'U'`.
+  #
+  # This class is not typically accessed directly, but is used by the `Lexer` class. The constructor
+  # for the `Lexer` class allows you to control which set or sets of keywords are used during the
+  # parsing process. This will control whether a `Token` has a `type` of `:keyword` or `:identifier`.
+  #
   class Keyword
     #
     # Source: select string_agg(word, ' ') from pg_get_keywords() where catcode != 'U';
@@ -49,6 +79,7 @@ module PgSqlLexer
       within without work wrapper write xml year yes zone
     ).to_set
 
+    # :nodoc:
     def self.is_keyword(s : String, reserved = true, non_reserved = false) : Bool
       (reserved && @@reserved.includes?(s.downcase)) || (non_reserved && @@non_reserved.includes?(s.downcase))
     end

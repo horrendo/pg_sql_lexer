@@ -3,9 +3,34 @@ require "./keyword"
 require "./exceptions"
 
 module PgSqlLexer
+  # :nodoc:
   alias Tokens = Array(Token)
 
+  # A lexer is a tool that analyzes a stream of text and generates a list of tokens that have been
+  # identified in that stream. This simple class is designed to take a string representing some
+  # SQL that has already been identified as syntactically correct by the postgres DB. For example
+  # it may be some SQL from a log file (my use case).
+  #
+  # To instantiate an instance of this class you pass a string with the SQL to parse into tokens.
+  # You can optionally control the sets of words that the lexer recognises as keywords. Refer to
+  # the `Keyword` class, but basically there are two sets of keywords - reserved and non-reserved.
+  # By default the lexer will only use the 'reserved' set of keywords but you can change this via
+  # arguments to the constructor.
+  #
+  # As part of instantiation the string will be parsed and if no errors are encounted the `tokens`
+  # property will contain all tokens encountered during this process.
+  #
+  # The parsing rules have been mostly derived from the [Postgres Docs](https://www.postgresql.org/docs/current/sql-syntax.html).
+  #
+  # Here is an example of this class being used:
+  # ```
+  # raw_sql = {slurp from a file maybe}
+  # minified = PgSqlLexer::Formatter.new(PgSqlLexer::Lexer(raw_sql).tokens).format_minified
+  # :
+  # ```
+  #
   class Lexer
+    # :nodoc:
     getter tokens : Tokens = [] of Token
     @pos : Int32 = 0
     @eos : Int32
@@ -15,7 +40,7 @@ module PgSqlLexer
       scan
     end
 
-    def scan : Nil
+    private def scan : Nil
       return @tokens if @buffer.size == 0
       loop do
         break unless next_token
@@ -23,7 +48,7 @@ module PgSqlLexer
       return @tokens
     end
 
-    def next_token : Bool
+    private def next_token : Bool
       case c = current_char
       when '\0' then return false
       when ' ', '\n', '\t'
@@ -108,7 +133,7 @@ module PgSqlLexer
       true
     end
 
-    def identifier_or_keyword(first_char : Char) : Nil
+    private def identifier_or_keyword(first_char : Char) : Nil
       token = [first_char]
       while c = current_char
         break unless c.alphanumeric? || c == '_' || c == '$'
@@ -121,7 +146,7 @@ module PgSqlLexer
         ident)
     end
 
-    def operator(first_char : Char) : Nil
+    private def operator(first_char : Char) : Nil
       token = [first_char]
       while c = current_char
         case c
@@ -149,7 +174,7 @@ module PgSqlLexer
       @tokens << Token.new(:operator, token.join)
     end
 
-    def hex_bit_string(first_char : Char) : Nil
+    private def hex_bit_string(first_char : Char) : Nil
       token = [first_char, '\'']
       @pos += 1
       while (c = current_char) != '\''
@@ -163,7 +188,7 @@ module PgSqlLexer
       @tokens << Token.new(:hex_bit_string, token.join)
     end
 
-    def binary_bit_string(first_char : Char) : Nil
+    private def binary_bit_string(first_char : Char) : Nil
       token = [first_char, '\'']
       @pos += 1
       while (c = current_char) != '\''
@@ -178,7 +203,7 @@ module PgSqlLexer
       @tokens << Token.new(:binary_bit_string, token.join)
     end
 
-    def positional_parameter : Nil
+    private def positional_parameter : Nil
       token = ['$']
       while c = current_char
         if c.number?
@@ -191,7 +216,7 @@ module PgSqlLexer
       @tokens << Token.new(:positional_parameter, token.join)
     end
 
-    def dollar_quote : Nil
+    private def dollar_quote : Nil
       token = ['$']
       first = true
       got_ident = false
@@ -227,7 +252,7 @@ module PgSqlLexer
       @tokens << Token.new(:string_constant, token.join)
     end
 
-    def numeric_constant(first_char : Char) : Nil
+    private def numeric_constant(first_char : Char) : Nil
       token = [first_char]
       seen_dot = first_char == '.'
       seen_digit = first_char.number?
@@ -263,7 +288,7 @@ module PgSqlLexer
       @tokens << Token.new(:numeric_constant, token.join)
     end
 
-    def string_constant(is_unicode = false) : Nil
+    private def string_constant(is_unicode = false) : Nil
       eos = false
       token = is_unicode ? ['u', '&'] : [] of Char
       token << '\''
@@ -300,7 +325,7 @@ module PgSqlLexer
       @tokens << Token.new(:string_constant, token.join)
     end
 
-    def quoted_identifier(is_unicode = false) : Nil
+    private def quoted_identifier(is_unicode = false) : Nil
       got_end = false
       got_ident = false
       token = is_unicode ? ['u', '&'] : [] of Char
@@ -322,7 +347,7 @@ module PgSqlLexer
       @tokens << Token.new(:quoted_identifier, token.join)
     end
 
-    def comment_to_star_slash : Nil
+    private def comment_to_star_slash : Nil
       token = [] of Char
       c = current_char # skip over '*'
       got_end = false
@@ -346,7 +371,7 @@ module PgSqlLexer
       @tokens << Token.new(:comment, token.join.strip.gsub(/\s+/, ' '))
     end
 
-    def comment_to_eol : Nil
+    private def comment_to_eol : Nil
       token = [] of Char
       c = current_char # skip over 2nd '-'
       loop do
@@ -360,7 +385,7 @@ module PgSqlLexer
       @tokens << Token.new(:comment, token.join.strip.gsub(/\s{2,}/, ' '))
     end
 
-    def current_char(skip = 0) : Char
+    private def current_char(skip = 0) : Char
       @pos += skip if skip > 0
       if @pos <= @eos
         c = @buffer[@pos]
@@ -370,7 +395,7 @@ module PgSqlLexer
       '\0'
     end
 
-    def peek_next_char(offset : Int32 = 0) : Char
+    private def peek_next_char(offset : Int32 = 0) : Char
       if (pos = @pos + offset) <= @eos
         @buffer[pos]
       else
