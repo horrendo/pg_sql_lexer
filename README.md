@@ -22,7 +22,7 @@ dependencies:
 require "pg_sql_lexer"
 :
 raw_sql = {slurp from a file maybe}
-minified = PgSqlLexer::Formatter.new(PgSqlLexer::Lexer(raw_sql).tokens).format_minified
+minified = PgSqlLexer::Formatter.new(PgSqlLexer::Lexer.new(raw_sql).tokens).format_minified
 :
 ```
 
