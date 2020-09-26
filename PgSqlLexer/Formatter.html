@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Crystal Docs 0.34.0">
+<meta name="crystal_docs.project_version" content="HEAD">
+<meta name="crystal_docs.project_name" content="pg_sql_lexer">
+
+
+<link href="../css/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../js/doc.js"></script>
+
+<svg class="hidden">
+  <symbol id="octicon-link" viewBox="0 0 16 16">
+    <path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+  </symbol>
+</svg>
+
+  <meta id="repository-name" content="pg_sql_lexer">
+  <title>PgSqlLexer::Formatter - pg_sql_lexer HEAD</title>
+  <script type="text/javascript">
+    CrystalDocs.base_path = "../";
+  </script>
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="sidebar-header">
+    <div class="search-box">
+      <input type="search" class="search-input" placeholder="Search..." spellcheck="false" aria-label="Search">
+    </div>
+
+    <div class="project-summary">
+      <h1 class="project-name">
+        <a href="../index.html">
+          pg_sql_lexer
+        </a>
+      </h1>
+
+      <span class="project-version">
+        HEAD
+      </span>
+    </div>
+  </div>
+
+  <div class="search-results" class="hidden">
+    <ul class="search-list"></ul>
+  </div>
+
+  <div class="types-list">
+    <ul>
+  
+  <li class="parent open current" data-id="pg_sql_lexer/PgSqlLexer" data-name="pgsqllexer">
+      <a href="../PgSqlLexer.html">PgSqlLexer</a>
+      
+        <ul>
+  
+  <li class=" current" data-id="pg_sql_lexer/PgSqlLexer/Formatter" data-name="pgsqllexer::formatter">
+      <a href="../PgSqlLexer/Formatter.html">Formatter</a>
+      
+    </li>
+  
+  <li class=" " data-id="pg_sql_lexer/PgSqlLexer/InvalidBinaryBitString" data-name="pgsqllexer::invalidbinarybitstring">
+      <a href="../PgSqlLexer/InvalidBinaryBitString.html">InvalidBinaryBitString</a>
+      
+    </li>
+  
+  <li class=" " data-id="pg_sql_lexer/PgSqlLexer/InvalidHexBitString" data-name="pgsqllexer::invalidhexbitstring">
+      <a href="../PgSqlLexer/InvalidHexBitString.html">InvalidHexBitString</a>
+      
+    </li>
+  
+  <li class=" " data-id="pg_sql_lexer/PgSqlLexer/InvalidIdentifier" data-name="pgsqllexer::invalididentifier">
+      <a href="../PgSqlLexer/InvalidIdentifier.html">InvalidIdentifier</a>
+      
+    </li>
+  
+  <li class=" " data-id="pg_sql_lexer/PgSqlLexer/InvalidNumericLiteral" data-name="pgsqllexer::invalidnumericliteral">
+      <a href="../PgSqlLexer/InvalidNumericLiteral.html">InvalidNumericLiteral</a>
+      
+    </li>
+  
+  <li class=" " data-id="pg_sql_lexer/PgSqlLexer/InvalidOperator" data-name="pgsqllexer::invalidoperator">
+      <a href="../PgSqlLexer/InvalidOperator.html">InvalidOperator</a>
+      
+    </li>
+  
+  <li class=" " data-id="pg_sql_lexer/PgSqlLexer/Keyword" data-name="pgsqllexer::keyword">
+      <a href="../PgSqlLexer/Keyword.html">Keyword</a>
+      
+    </li>
+  
+  <li class=" " data-id="pg_sql_lexer/PgSqlLexer/Lexer" data-name="pgsqllexer::lexer">
+      <a href="../PgSqlLexer/Lexer.html">Lexer</a>
+      
+    </li>
+  
+  <li class=" " data-id="pg_sql_lexer/PgSqlLexer/MissingEndComment" data-name="pgsqllexer::missingendcomment">
+      <a href="../PgSqlLexer/MissingEndComment.html">MissingEndComment</a>
+      
+    </li>
+  
+  <li class=" " data-id="pg_sql_lexer/PgSqlLexer/MissingEndQuotedIdentifier" data-name="pgsqllexer::missingendquotedidentifier">
+      <a href="../PgSqlLexer/MissingEndQuotedIdentifier.html">MissingEndQuotedIdentifier</a>
+      
+    </li>
+  
+  <li class=" " data-id="pg_sql_lexer/PgSqlLexer/MissingEndQuotedLiteral" data-name="pgsqllexer::missingendquotedliteral">
+      <a href="../PgSqlLexer/MissingEndQuotedLiteral.html">MissingEndQuotedLiteral</a>
+      
+    </li>
+  
+  <li class=" " data-id="pg_sql_lexer/PgSqlLexer/NoZeroLengthQuotedIdentifier" data-name="pgsqllexer::nozerolengthquotedidentifier">
+      <a href="../PgSqlLexer/NoZeroLengthQuotedIdentifier.html">NoZeroLengthQuotedIdentifier</a>
+      
+    </li>
+  
+  <li class=" " data-id="pg_sql_lexer/PgSqlLexer/Token" data-name="pgsqllexer::token">
+      <a href="../PgSqlLexer/Token.html">Token</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+</ul>
+
+  </div>
+</div>
+
+
+<div class="main-content">
+<h1 class="type-name">
+
+  <span class="kind">class</span> PgSqlLexer::Formatter
+
+</h1>
+
+
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../PgSqlLexer/Formatter.html">PgSqlLexer::Formatter</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
+
+
+
+
+  <h2>
+    <a id="overview" class="anchor" href="#overview">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Overview
+  </h2>
+
+  <p>This class converts an array of <code><a href="../PgSqlLexer/Token.html">Token</a></code> objects produced by a <code><a href="../PgSqlLexer/Lexer.html">Lexer</a></code> into a formatted string.
+Currently the only method is to produce a 'minified' format, but at some point this may be
+expanded to other formats. Typical usage:</p>
+
+<pre><code>raw_sql <span class="o">=</span> {slurp from a file maybe}
+minified <span class="o">=</span> <span class="t">PgSqlLexer</span><span class="t">::</span><span class="t">Formatter</span>.<span class="k">new</span>(<span class="t">PgSqlLexer</span><span class="t">::</span><span class="t">Lexer</span>.<span class="k">new</span>(raw_sql).tokens).format_minified
+:</code></pre>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <h2>
+    <a id="defined-in" class="anchor" href="#defined-in">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Defined in:
+  </h2>
+  
+    
+      <a href="https://github.com/horrendo/pg_sql_lexer/blob/1e20f45772969244d736615cdb3823761b75388a/src/pg_sql_lexer/formatter.cr#L13" target="_blank">
+        pg_sql_lexer/formatter.cr
+      </a>
+    
+    <br/>
+  
+
+
+
+
+
+  <h2>
+    <a id="constructors" class="anchor" href="#constructors">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Constructors
+  </h2>
+  <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#new(tokens:Array(Token))-class-method" class="signature"><strong>.new</strong>(tokens : Array(Token))</a>
+        
+      </li>
+    
+  </ul>
+
+
+
+
+
+  <h2>
+    <a id="instance-method-summary" class="anchor" href="#instance-method-summary">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Instance Method Summary
+  </h2>
+  <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#format_minified(include_comments=false):String-instance-method" class="signature"><strong>#format_minified</strong>(include_comments = <span class="n">false</span>) : String</a>
+        
+          <div class="summary"><p>This method takes a collection of tokens and outputs a 'minified' version of the SQL.</p></div>
+        
+      </li>
+    
+  </ul>
+
+
+
+
+
+<div class="methods-inherited">
+  
+    
+
+
+    
+
+
+    
+
+
+  
+    
+
+
+    
+
+
+    
+
+
+  
+</div>
+
+
+  <h2>
+    <a id="constructor-detail" class="anchor" href="#constructor-detail">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Constructor Detail
+  </h2>
+  
+    <div class="entry-detail" id="new(tokens:Array(Token))-class-method">
+      <div class="signature">
+        
+        def self.<strong>new</strong>(tokens : Array(<a href="../PgSqlLexer/Token.html">Token</a>))
+
+        <a class="method-permalink" href="#new(tokens:Array(Token))-class-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/horrendo/pg_sql_lexer/blob/1e20f45772969244d736615cdb3823761b75388a/src/pg_sql_lexer/formatter.cr#L14" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+
+
+
+
+
+  <h2>
+    <a id="instance-method-detail" class="anchor" href="#instance-method-detail">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Instance Method Detail
+  </h2>
+  
+    <div class="entry-detail" id="format_minified(include_comments=false):String-instance-method">
+      <div class="signature">
+        
+        def <strong>format_minified</strong>(include_comments = <span class="n">false</span>) : String
+
+        <a class="method-permalink" href="#format_minified(include_comments=false):String-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>This method takes a collection of tokens and outputs a 'minified' version of the SQL.</p>
+
+<p>The 'reconstituted' SQL is formatted on a single line (i.e. no newlines) and with no
+more than one space between tokens. Sometimes there is no space between tokens (e.g.
+if the previous token is a <code>(</code>).</p>
+
+<p>For example (from test suite):</p>
+
+<pre><code>it <span class="s">&quot;correctly minifies a statement excluding multi-line comments&quot;</span> <span class="k">do</span>
+  <span class="t">PgSqlLexer</span><span class="t">::</span><span class="t">Formatter</span>.<span class="k">new</span>(
+    <span class="t">PgSqlLexer</span><span class="t">::</span><span class="t">Lexer</span>
+      .<span class="k">new</span>(<span class="s">&quot;SELECT 1\n/*\n Some comment\n*/\nFROM\t\tsome_table\n;&quot;</span>)
+      .tokens)
+    .format_minified.should eq(<span class="s">&quot;select 1 from some_table;&quot;</span>)
+<span class="k">end</span></code></pre>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/horrendo/pg_sql_lexer/blob/1e20f45772969244d736615cdb3823761b75388a/src/pg_sql_lexer/formatter.cr#L35" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+
+
+
+
+</div>
+
+</body>
+</html>
