@@ -1,5 +1,5 @@
 name: pg_sql_lexer
-version: 0.1.2
+version: 0.1.3
 description: A simple lexer and sql minifier for postgres sql
 
 authors:

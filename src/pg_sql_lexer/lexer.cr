@@ -108,6 +108,12 @@ module PgSqlLexer
         else
           identifier_or_keyword(c)
         end
+      when 'e', 'E'
+        if peek_next_char == '\''
+          string_constant(false, true)
+        else
+          identifier_or_keyword(c)
+        end
       when 'x', 'X'
         if peek_next_char == '\''
           hex_bit_string(c)
@@ -288,10 +294,9 @@ module PgSqlLexer
       @tokens << Token.new(:numeric_constant, token.join)
     end
 
-    private def string_constant(is_unicode = false) : Nil
+    private def string_constant(is_unicode = false, is_escaped = false) : Nil
       eos = false
-      token = is_unicode ? ['u', '&'] : [] of Char
-      token << '\''
+      token = is_unicode ? ['u', '&', '\''] : (is_escaped ? ['e', current_char] : ['\''])
       until eos
         case c = current_char
         when '\0'

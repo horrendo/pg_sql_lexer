@@ -1,0 +1,1 @@
+select coalesce(null, 10), to_char(current_date, 'YYYY-MM-DD'), e'this\nis\na\nmulti-line\nstring';
