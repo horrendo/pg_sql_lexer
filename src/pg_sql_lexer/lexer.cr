@@ -167,9 +167,12 @@ module PgSqlLexer
         case c
         when '-'
           raise InvalidOperator.new if token[-1] == '-'
+          break if numeric_ahead
+        when '+'
+          break if numeric_ahead
         when '*'
           raise InvalidOperator.new if token[-1] == '/'
-        when '+', '/', '<', '>', '=', '~', '!', '@', '#', '%', '^', '&', '|', '`', '?'
+        when '/', '<', '>', '=', '~', '!', '@', '#', '%', '^', '&', '|', '`', '?'
         else
           @pos -= 1 unless c == '\0'
           break
@@ -187,6 +190,12 @@ module PgSqlLexer
         raise InvalidOperator.new unless found
       end
       @tokens << Token.new(:operator, token.join)
+    end
+
+    private def numeric_ahead : Bool
+      n0 = peek_next_char
+      n1 = peek_next_char(1)
+      n0.number? || (n0 == '.' && n1.number?)
     end
 
     private def hex_bit_string(first_char : Char) : Nil

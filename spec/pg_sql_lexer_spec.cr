@@ -209,6 +209,15 @@ describe PgSqlLexer do
       end
     end
 
+    it "correctly separates numeric constants from operators" do
+      ["*.1", "/-3", "+-.1", "-+.1", "-+1"].each do |s|
+        tokens = PgSqlLexer::Lexer.new(s).tokens
+        tokens.size.should eq(2)
+        tokens[0].type.should eq(:operator)
+        tokens[1].type.should eq(:numeric_constant)
+      end
+    end
+
     it "correctly identifies keywords" do
       %w(select where with Primary CREATE order where and or TiMeStAmP).each do |w|
         tokens = PgSqlLexer::Lexer.new(w).tokens
