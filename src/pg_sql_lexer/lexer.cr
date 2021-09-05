@@ -40,12 +40,12 @@ module PgSqlLexer
       scan
     end
 
-    private def scan : Nil
+    private def scan : Tokens
       return @tokens if @buffer.size == 0
       loop do
         break unless next_token
       end
-      return @tokens
+      @tokens
     end
 
     private def next_token : Bool
@@ -72,10 +72,19 @@ module PgSqlLexer
         case peek_next_char
         when '-'
           comment_to_eol
+        when '.', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
+          numeric_constant(c)
         else
           operator(c)
         end
-      when '+', '*', '<', '>', '=', '~', '!', '@', '#', '%', '^', '&', '|', '`', '?'
+      when '+'
+        case peek_next_char
+        when '.', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
+          numeric_constant(c)
+        else
+          operator(c)
+        end
+      when '*', '<', '>', '=', '~', '!', '@', '#', '%', '^', '&', '|', '`', '?'
         operator(c)
       when '/'
         case peek_next_char

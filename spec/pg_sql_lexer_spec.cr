@@ -141,7 +141,7 @@ describe PgSqlLexer do
     end
 
     it "correctly identifies a numeric constant" do
-      ["1", "987", "0", "0.123", ".123", "123e-1", "123e+1", "123e1"].each do |s|
+      ["1", "987", "0", "0.123", ".123", "123e-1", "123e+1", "123e1", "-1", "+99", "-.9", "+.1"].each do |s|
         tokens = PgSqlLexer::Lexer.new(s).tokens
         tokens.size.should eq(1)
         tokens[0].type.should eq(:numeric_constant)
